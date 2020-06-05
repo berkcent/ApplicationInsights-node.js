@@ -103,7 +103,10 @@ class HttpRequestParser extends RequestParser {
         return requestTelemetry;
     }
 
-    public getRequestTags(tags: { [key: string]: string }): { [key: string]: string } {
+    public getRequestTags(
+        tags: Record<string, string>,
+        anonymizeRequest: boolean = false,
+    ): Record<string, string> {
         // create a copy of the context for requests since client info will be used here
         var newTags = <{ [key: string]: string }>{};
         for (var key in tags) {
@@ -115,7 +118,7 @@ class HttpRequestParser extends RequestParser {
         newTags[HttpRequestParser.keys.sessionId] = tags[HttpRequestParser.keys.sessionId] || this._getId("ai_session");
         newTags[HttpRequestParser.keys.userId] = tags[HttpRequestParser.keys.userId] || this._getId("ai_user");
         newTags[HttpRequestParser.keys.userAuthUserId] = tags[HttpRequestParser.keys.userAuthUserId] || this._getId("ai_authUser");
-        newTags[HttpRequestParser.keys.operationName] = this.getOperationName(tags);
+        newTags[HttpRequestParser.keys.operationName] = this.getOperationName(tags, anonymizeRequest);
         newTags[HttpRequestParser.keys.operationParentId] = this.getOperationParentId(tags);
         newTags[HttpRequestParser.keys.operationId] = this.getOperationId(tags);
 
@@ -130,7 +133,11 @@ class HttpRequestParser extends RequestParser {
         return tags[HttpRequestParser.keys.operationParentId] || this.parentId || this.getOperationId(tags);
     }
 
-    public getOperationName(tags: { [key: string]: string }) {
+    public getOperationName(
+        tags: Record<string, string>,
+        anonymizeRequest: boolean = false,
+    ): string {
+        console.log({anonymizeRequest});
         return tags[HttpRequestParser.keys.operationName] || this.method + " " + url.parse(this.url).pathname;
     }
 

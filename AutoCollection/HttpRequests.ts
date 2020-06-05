@@ -248,7 +248,7 @@ class AutoCollectHttpRequests {
 
         var requestTelemetry = requestParser.getRequestTelemetry(telemetry);
 
-        requestTelemetry.tagOverrides = requestParser.getRequestTags(client.context.tags);
+        requestTelemetry.tagOverrides = requestParser.getRequestTags(client.context.tags, client.config.anonymizeRequests);
         if (telemetry.tagOverrides) {
             for (let key in telemetry.tagOverrides) {
                 requestTelemetry.tagOverrides[key] = telemetry.tagOverrides[key];
