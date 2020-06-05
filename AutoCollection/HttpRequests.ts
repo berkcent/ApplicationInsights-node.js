@@ -17,6 +17,8 @@ class AutoCollectHttpRequests {
 
     private static alreadyAutoCollectedFlag = '_appInsightsAutoCollected';
 
+    private static keys = new Contracts.ContextTagKeys();
+
     private _client: TelemetryClient;
     private _isEnabled: boolean;
     private _isInitialized: boolean;
@@ -249,6 +251,13 @@ class AutoCollectHttpRequests {
         var requestTelemetry = requestParser.getRequestTelemetry(telemetry);
 
         requestTelemetry.tagOverrides = requestParser.getRequestTags(client.context.tags, client.config.anonymizeRequests);
+
+        if (client.config.anonymizeRequests) {
+            const operationName = (telemetry.response as any).req.route.path;
+            const method = (telemetry.response as any).req.method;
+            requestTelemetry.tagOverrides[AutoCollectHttpRequests.keys.operationName] = `${method} ${operationName}`;
+        }
+
         if (telemetry.tagOverrides) {
             for (let key in telemetry.tagOverrides) {
                 requestTelemetry.tagOverrides[key] = telemetry.tagOverrides[key];
