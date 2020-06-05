@@ -250,7 +250,7 @@ class AutoCollectHttpRequests {
 
         var requestTelemetry = requestParser.getRequestTelemetry(telemetry);
 
-        requestTelemetry.tagOverrides = requestParser.getRequestTags(client.context.tags, client.config.anonymizeRequests);
+        requestTelemetry.tagOverrides = requestParser.getRequestTags(client.context.tags);
 
         if (client.config.anonymizeRequests) {
             const operationName = (telemetry.response as any).req.route.path;
