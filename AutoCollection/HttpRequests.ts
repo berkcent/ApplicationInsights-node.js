@@ -252,10 +252,15 @@ class AutoCollectHttpRequests {
 
         requestTelemetry.tagOverrides = requestParser.getRequestTags(client.context.tags);
 
-        if (client.config.anonymizeRequests) {
-            const operationName = (telemetry.response as any).req.route.path;
-            const method = (telemetry.response as any).req.method;
-            requestTelemetry.tagOverrides[AutoCollectHttpRequests.keys.operationName] = `${method} ${operationName}`;
+        // Request operation name anonymization works only for Express.js
+        if (client.config.anonymizeRequestOperationName) {
+            const responseReq = (telemetry.response as any).req;
+
+            if (responseReq && responseReq.route && responseReq.route.path) {
+                const urlWithParams: string = responseReq.route.path;
+                const requestMethod: string = responseReq.method;
+                requestTelemetry.tagOverrides[AutoCollectHttpRequests.keys.operationName] = `${requestMethod} ${urlWithParams}`;
+            }
         }
 
         if (telemetry.tagOverrides) {

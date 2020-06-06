@@ -39,8 +39,8 @@ class Config {
     public disableAppInsights: boolean;
     /** The percentage of telemetry items tracked that should be transmitted (Default 100) */
     public samplingPercentage: number;
-    /** If true, request will be logged as "GET /api/client/:clientId" instead "GET /api/client/123" */
-    public anonymizeRequests: boolean;
+    /** If true, request will be logged as "GET /api/client/:clientId" instead "GET /api/client/123" (Default false, works only for Express.js) */
+    public anonymizeRequestOperationName: boolean;
     /** The time to wait before retrying to retrieve the id for cross-component correlation (Default 30000) */
     public correlationIdRetryIntervalMs: number;
     /** A list of domains to exclude from cross-component header injection */
